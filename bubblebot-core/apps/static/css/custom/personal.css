@@ -1,0 +1,21 @@
+#avatarImg {
+    width: 100px;
+    height: 100px;
+}
+
+#submitBtn {
+    width: 140px;
+}
+
+.avatar_file_input {
+    display: none;
+}
+
+.label-text-size {
+    font-size: 18px;
+}
+
+.form-control.error-shadow {
+    -webkit-box-shadow: 0 0 0 0.2rem #dc354645;
+    box-shadow: 0 0 0 0.2rem #dc354645;
+}

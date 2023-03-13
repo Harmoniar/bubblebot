@@ -1,0 +1,16 @@
+# Django本体
+django==3.2.15
+# 日志模块
+loguru
+# yaml模块
+pyyaml
+# WSGI服务器
+gunicorn
+# MySQL客户端
+mysqlclient
+# 加解密库
+pycryptodome
+# 模板引擎库
+jinja2
+# 定时任务架构
+apscheduler

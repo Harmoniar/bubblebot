@@ -1,0 +1,179 @@
+{% extends "index.html" %}
+
+
+<!-------------- 标题 --------------->
+
+
+{% block title %}
+<title>Dashboard | Function</title>
+{% endblock %}
+
+
+<!-------------- CSS --------------->
+
+
+{% block css %}
+{% endblock %}
+
+
+<!-------------- 页面内容 --------------->
+
+
+{% block content %}
+
+<div class="row">
+    <div class="col-lg-12 mb-3">
+        <h1 class="head-title ml-2 mr-2">FUNCTION&nbsp;&nbsp;MANAGE</h1>
+        <span class="text-muted text-uppercase">功能管理</span>
+        <!-- <hr> -->
+        <div class="head-line mb-3 mt-3"></div>
+    </div>
+    <div class="col-lg-12 mb-3">
+        <div class="card bg-analytics">
+            <div class="card-body">
+                <form id="queryForm" action="{{ url('admin_function_query') }}" method="get" novalidate>
+                    <div class="row align-items-end">
+                        {% for form_field in query_forms %}
+                        {% if form_field.name not in ("page_index", "per_page_num") %}
+                        <div class="col-lg-2 mb-2">
+                            <label for="{{ form_field.auto_id }}"><span class="text-muted pl-2">{{ form_field.label }} :&nbsp;</span></label>
+                            {{ form_field }}
+                        </div>
+                        {% endif %}
+                        {% endfor %}
+                        <div class="col-lg-1 mb-2 pl-0 pr-0 filter-btn-adaption text-center">
+                            <button id="queryBtn" type="button" class="btn btn-primary"><i class="fas fa-magnifying-glass"></i><span class="filter-btn-text-adaption"> 搜索</span></button>
+                        </div>
+                        <div class="col-lg-1 mb-2 pl-0 pr-0 filter-btn-adaption text-center">
+                            <button id="resetBtn" type="reset" class="btn btn-warning"><i class="fas fa-rotate"></i><span class="filter-btn-text-adaption"> 重置</span></button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-12 mb-0">
+        <div class="card bg-analytics">
+            <div class="card-body">
+                <div id="renderData" style="display: none;" csrf-token="{{ csrf_token }}" insert-url="{{ url('admin_function_insert') }}" update-url="{{ url('admin_function_update') }}" delete-url="{{ url('admin_function_delete') }}"></div>
+                <div class="d-flex justify-content-between mb-3">
+                    <div>
+                        <button data-toggle="modal" href="#insertModal" class="btn btn-success outline pl-3 pr-3 btn-square text-white mr-1"><i class="fas fa-plus mr-1"></i> 新增</button>
+                        <button id="headerDeleteBtn" class="btn btn-danger outline pl-3 pr-3 btn-square text-white mr-1"><i class="fas fa-xmark mr-1"></i> 删除</button>
+                    </div>
+                    <div class="btn-group">
+                        <button id="flushBtn" class="btn btn-light outline btn-square group-btn-decor"><i class="fas fa-arrow-rotate-right"></i></button>
+                    </div>
+                </div>
+                <div>
+                    <div class="table-limit">
+                        <table class="table table-hover mb-0 equal-width-font display-table">
+                            <thead>
+                                <tr style="background-color: #eff2f7;">
+                                    <td style="width: 40px;"><input id="btSelectAllInput" type="checkbox"></td>
+                                    <td style="width: 80px;">序号</td>
+                                    <td style="width: 120px;">功能ID</td>
+                                    <td style="width: 120px;">功能名称</td>
+                                    <td style="width: 120px;">功能路径</td>
+                                    <td style="width: 120px;">功能分类</td>
+                                    <td style="width: 120px;">功能状态</td>
+                                    <td style="width: 120px;">功能说明</td>
+                                    <td style="width: 145px;">操作</td>
+                                </tr>
+                            </thead>
+                        </table>
+                        <table class="table table-hover mb-0 equal-width-font display-table">
+                            <tbody id="displayTableBody">
+                                <tr>
+                                    <td colspan="5" class="text-center text-muted">
+                                        <div class="spinner-border text-primary load-align mr-1"></div>正在努力加载数据中，请稍等...
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <hr class="mt-0 mb-4">
+                    <div class="d-flex align-items-end justify-content-between">
+                        <div id="pagerLeftDiv" class="not-display">
+                            <span id="pagerInfoSpan"></span>
+                            <select id="perPageNumSelect" class="form-control btn-square pl-2 pr-0" style="display: inline-block; width: auto;">
+                                <option value="10" selected>10</option>
+                                <option value="50">50</option>
+                                <option value="100">100</option>
+                            </select>
+                            &nbsp;条记录每页
+                        </div>
+                        <div id="pagerRightDiv" class="not-display">
+                            <ul id="paginationList" class="pagination mb-0 equal-width-font">
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="insertModal" tabindex="-1" class="modal fade text-left" style="display: none;">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header d-flex align-items-center pb-2 pt-3">
+                <h3 class="mt-1 ml-1 mr-2">ADD&nbsp;&nbsp;FUNCTION</h3>
+                <span class="text-muted text-uppercase">添加功能</span>
+                <button type="button" data-dismiss="modal" class="close"><i class="fas fa-xmark mr-1"></i></button>
+            </div>
+            <div class="modal-body pl-4 pr-4">
+                <form id="insertForm">
+                    {% for form_field in insert_forms %}
+                    <div class="form-group">
+                        {% if form_field.help_text %}
+                        <label for="{{ form_field.auto_id }}" data-toggle="tooltip" data-placement="right" title='{{ form_field.help_text }}'>
+                            <span class="text-muted pl-2">{{ form_field.label }} :&nbsp;<i class="fa-solid fa-circle-exclamation mr-1 text-blue"></i></span>
+                        </label>
+                        {% else %}
+                        <label for="{{ form_field.auto_id }}"><span class="text-muted pl-2">{{ form_field.label }} :&nbsp;</span></label>
+                        {% endif %}
+                        {{ form_field }}
+                    </div>
+                    {% endfor %}
+                </form>
+            </div>
+            <div class="modal-footer pl-4 pr-4 mb-2">
+                <button id="cancelInsertBtn" type="button" data-dismiss="modal" class="btn btn-secondary">取消</button>
+                <button id="confirmInsertBtn" type="button" class="btn btn-primary">保存</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="updateModal" tabindex="-1" class="modal fade text-left hidden-scrollbar" style="display: none;">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+        <div class="modal-content">
+            <div class="modal-header d-flex align-items-center pb-2 pt-3">
+                <h3 class="mt-1 ml-1 mr-2">FUNCTION&nbsp;&nbsp;CONFIGURATION</h3>
+                <span class="text-muted text-uppercase">功能配置</span>
+                <button type="button" data-dismiss="modal" class="close"><i class="fas fa-xmark mr-1"></i></button>
+            </div>
+            <div id="updateModalBody" class="modal-body pl-4 pr-4">
+            </div>
+            <div class="modal-footer pl-4 pr-4 mb-2">
+                <button id="cancelUpdateBtn" type="button" data-dismiss="modal" class="btn btn-secondary">取消</button>
+                <button id="confirmUpdateBtn" type="button" class="btn btn-primary">保存</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}
+
+
+<!-------------- JavaScript --------------->
+
+
+{% block js %}
+<script src="{{ static('js/custom/function.js') }}"></script>
+<script src="{{ static('js/custom/dataRender/query.js') }}"></script>
+<script src="{{ static('js/custom/dataRender/insert.js') }}"></script>
+<script src="{{ static('js/custom/dataRender/delete.js') }}"></script>
+<script src="{{ static('js/custom/dataRender/update.js') }}"></script>
+{% endblock %}

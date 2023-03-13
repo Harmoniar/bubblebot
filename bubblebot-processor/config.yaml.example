@@ -1,0 +1,15 @@
+COMPONENT_ID: "processor-01"
+HTTP_API_HOST: "127.0.0.1"
+HTTP_API_PORT: 8080
+# 需要和core配置的API_KEY保持一致
+API_KEY: ""
+
+# 日志配置
+LOG_LEVEL: "INFO"
+LOG_DIR: "logs/"
+
+# Redis Queue配置
+"REDIS_HOST": "127.0.0.1"
+"REDIS_PORT": 6379
+"REDIS_PASSWORD": ""
+"REDIS_DB": 0

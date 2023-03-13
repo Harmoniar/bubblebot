@@ -1,0 +1,70 @@
+{% extends "index.html" %}
+
+
+<!-------------- 标题 --------------->
+
+
+{% block title %}
+<title>Dashboard | Personal</title>
+{% endblock %}
+
+
+<!-------------- CSS --------------->
+
+
+{% block css %}
+<link rel="stylesheet" href="{{ static('css/custom/personal.css') }}">
+{% endblock %}
+
+
+<!-------------- 页面内容 --------------->
+
+
+{% block content %}
+
+<div class="row">
+    <div class="col-lg-6 offset-lg-3 mb-0">
+        <div class="card bg-analytics text-white mb-0">
+            <div class="card-body text-center">
+                <h2 class="align-items-center text-dark">USER INFOMATION</h2>
+                <span class="text-muted text-uppercase small">修 改 用 户 信 息</span>
+                <hr class="mb-4">
+                <img src="{% if request.user.avatar %}{{ media(request.user.avatar) }}{% else %}{{ static('img/avatar/default.jpg') }}{% endif %}" id="avatarImg" class="img-fluid rounded-circle shadow mb-3">
+
+                <form id="personalForm" csrf-token="{{ csrf_token }}" novalidate>
+                    <div class="form-group">
+                        <label for="{{ personal_forms.avatar.auto_id }}"><a class="btn btn-light outline">选择头像</a></label>
+                        {{ personal_forms.avatar }}
+                    </div>
+                    <div class="line mb-4 mt-4"></div>
+                    <div class="form-group row">
+                        {% for form_field in personal_forms %}
+                            {% if form_field.name != 'avatar' %}
+                            <div class="col-lg-8 offset-lg-2 text-left mb-3">
+                                <label for="{{ form_field.auto_id }}" class="form-control-label pl-2">
+                                    <span class="text-muted label-text-size">{{ form_field.label }} :&nbsp;</span>
+                                </label>
+                                {{ form_field }}
+                            </div>
+                            {%endif %}
+                        {% endfor %}
+                    </div>
+                </form>
+                <div class="col-lg-8 offset-lg-2 mt-4">
+                    <button id="submitBtn" class="btn btn-primary">提交修改</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+{% endblock %}
+
+
+<!-------------- JavaScript --------------->
+
+
+{% block js %}
+<script src="{{ static('js/custom/personal.js') }}"></script>
+{% endblock %}

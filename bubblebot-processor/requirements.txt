@@ -1,0 +1,17 @@
+aredis
+apscheduler
+httpx
+pyyaml
+pycryptodome
+BeautifulSoup4
+lxml
+loguru
+aiocache
+typing_extensions
+ujson
+msgpack
+opencv-python-headless
+ImageHash
+matplotlib
+mido
+aiofiles

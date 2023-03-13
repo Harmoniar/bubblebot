@@ -1,0 +1,265 @@
+{% extends "index.html" %}
+
+
+<!-------------- 标题 --------------->
+
+
+{% block title %}
+<title>Dashboard | Home</title>
+{% endblock %}
+
+
+<!-------------- CSS --------------->
+
+
+{% block css %}
+<!-- custom CSS -->
+<link rel="stylesheet" href="{{ static('css/custom/home.css') }}">
+{% endblock %}
+
+
+<!-------------- 页面内容 --------------->
+
+
+{% block content %}
+
+<div class="row">
+    <!-- 左列 -->
+    <div class="col-lg-6 mb-0">
+        <!-- 欢迎卡片 -->
+        <div class="card bg-analytics text-white mb-4">
+            <div class="card-body text-center">
+                <img src="{{ static('img/home/decore-left.png') }}" class="img-left">
+                <img src="{{ static('img/home/decore-right.png') }}" class="img-right">
+                <img src="{% if request.user.avatar %}{{ media(request.user.avatar) }}{% else %}{{ static('img/avatar/default.jpg') }}{% endif %}"
+                    style="width: 100px; height:100px;" class="img-fluid rounded-circle shadow mb-2">
+                <div class="text-center">
+                    <h1 class="mb-2 text-white">Hi, {{ request.user.username }}</h1>
+                    <p class="m-auto w-75">欢迎使用 <strong>BubbleBot</strong>，期待能给您带来优质的BOT服务</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- 最近登录 -->
+        <div class="card mb-4">
+            <div class="card-body">
+                <div class="flex-row">
+                    <div class="row">
+                        <div class="col-lg-12 mb-0">
+                            <h2 class="d-flex align-items-center">
+                                <span>RECENT LOGIN LOG</span>
+                                <span class="dot bg-violet d-inline-block ml-3"></span>
+                            </h2>
+                            <span class="text-muted text-uppercase small">最近登录日志</span>
+                            <table class="table table-striped card-text mt-4">
+                                <thead>
+                                    <tr>
+                                        <th>序号</th>
+                                        <th>登录IP</th>
+                                        <th>登录位置</th>
+                                        <th>登录日期</th>
+                                        <th>登录结果</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for login_log in user_login_logs %}
+                                    <tr>
+                                        <td>{{ loop.index }}</td>
+                                        <td>{{ login_log.login_ip }}</td>
+                                        <td>{{ login_log.login_location }}</td>
+                                        <td>{{ login_log.login_time|date }}</td>
+
+                                        {% if login_log.login_result == 0 %}
+                                        <td>登录成功</td>
+                                        {% else %}
+                                        <td>登录失败</td>
+                                        {% endif %}
+                                    </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                            {% if not user_login_logs %}
+                            <h3 class="text-center text-muted">没有更多的信息了...</h3>
+                            {% endif %}
+                            <a href="{{ url('admin_loginlog') }}" class="btn btn-primary float-right mb-0 mt-2">查看更多</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- 最近登录结束 -->
+
+    </div>
+
+    <!-- 右列 -->
+    <div class="col-lg-6 mb-0 mb-lg-0">
+
+        <!-- 机器人运行状态 -->
+        <div class="card mb-4">
+            <div class="card-body">
+                <div class="mb-3 flex-row">
+                    <div class="row">
+                        <div class="col-lg-12 mb-4">
+                            <h2 class="d-flex align-items-center">
+                                <span>BOT RUNNING STATE</span>
+                                <span class="dot bg-violet d-inline-block ml-3"></span>
+                            </h2>
+                            <span class="text-muted text-uppercase small">BOT机器人运行状态</span>
+                            <hr>
+                        </div>
+
+                        {% for robot_data in user_robots %}
+                        <div class="col-lg-12 {% if not loop.last %}mb-4{% endif %}">
+                            <div
+                                class="bg-white shadow roundy p-4 h-100 d-flex align-items-center justify-content-between">
+                                <div class="flex-grow-1 d-flex">
+                                    <img src="https://q2.qlogo.cn/headimg_dl?dst_uin={{ robot_data.robot_id }}&spec=640"
+                                        style="width: 100px; height:100px; margin-right: 20px;"
+                                        class="img-fluid rounded-circle shadow">
+                                    <div class="text">
+                                        <p class="text-muted mb-1">BOT
+                                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;名称：{{ robot_data.robot_name }}</p>
+                                        <p class="text-muted mb-1">BOT
+                                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;QQ号：{{ robot_data.robot_id }}</p>
+                                        <p class="text-muted mb-1">BOT 运行状态：启用</p>
+                                        {% if robot_data.start_time %}
+                                        <p class="text-muted mb-1">BOT 运行时长：{{ robot_data.start_time|run_time }}</p>
+                                        {% else %}
+                                        <p class="text-muted mb-1">BOT 运行时长：-</p>
+                                        {% endif %}
+                                    </div>
+                                </div>
+                                <div class="icon text-white bg-blue"><i class="fas fa-robot"></i></div>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- 机器人状态结束 -->
+
+
+        <!-- 机器人功能排名 -->
+        <!-- <div class="card mb-3">
+            <div class="card-body">
+                <div class="mb-3 flex-row">
+                    <div class="row">
+                        <div class="col-lg-12 mb-4">
+                            <h2 class="d-flex align-items-center">
+                                <span>BOT FUNCTIONAL RANK</span>
+                                <span class="dot bg-violet d-inline-block ml-3"></span>
+                            </h2>
+                            <span class="text-muted text-uppercase small">BOT机器人功能使用排名</span>
+                            <hr>
+                        </div>
+                        <div class="col-lg-12 mb-4">
+                            <div class="card mb-lg-0">
+                                <div class="card-header">
+                                    <p class="text-muted mb-0" style="font-size: 18px; font-weight: 600;">
+                                        <img src="https://q2.qlogo.cn/headimg_dl?dst_uin=295983086&spec=640"
+                                            style="height:40px; margin-right: 10px;"
+                                            class="img-fluid rounded-circle shadow">
+                                        赛雅卜忒的功能使用排名
+                                    </p>
+                                </div>
+                                <div class="card-body pb-4">
+                                    <table class="table table-striped card-text">
+                                        <thead>
+                                            <tr>
+                                                <th>排名</th>
+                                                <th>功能名</th>
+                                                <th>使用次数</th>
+                                                <th>使用率</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr>
+                                                <th scope="row">1</th>
+                                                <td>每日新闻</td>
+                                                <td>192次</td>
+                                                <td>13.4%</td>
+                                            </tr>
+                                            <tr>
+                                                <th scope="row">2</th>
+                                                <td>每日运势</td>
+                                                <td>232次</td>
+                                                <td>8.5%</td>
+                                            </tr>
+                                            <tr>
+                                                <th scope="row">3</th>
+                                                <td>每日占卜</td>
+                                                <td>121次</td>
+                                                <td>4.3%</td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                    <button class="btn btn-primary float-right mb-0 mt-2">查看更多</button>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-12">
+                            <div class="card mb-lg-0">
+                                <div class="card-header">
+                                    <p class="text-muted mb-0" style="font-size: 18px; font-weight: 600;">
+                                        <img src="https://q2.qlogo.cn/headimg_dl?dst_uin=295983086&spec=640"
+                                            style="height:40px; margin-right: 10px;"
+                                            class="img-fluid rounded-circle shadow">
+                                        赛雅卜忒的功能使用排名
+                                    </p>
+                                </div>
+                                <div class="card-body pb-4">
+                                    <table class="table table-striped card-text">
+                                        <thead>
+                                            <tr>
+                                                <th>排名</th>
+                                                <th>功能名</th>
+                                                <th>使用次数</th>
+                                                <th>使用率</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr>
+                                                <th scope="row">1</th>
+                                                <td>每日新闻</td>
+                                                <td>192次</td>
+                                                <td>13.4%</td>
+                                            </tr>
+                                            <tr>
+                                                <th scope="row">2</th>
+                                                <td>每日运势</td>
+                                                <td>232次</td>
+                                                <td>8.5%</td>
+                                            </tr>
+                                            <tr>
+                                                <th scope="row">3</th>
+                                                <td>每日占卜</td>
+                                                <td>121次</td>
+                                                <td>4.3%</td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                    <button class="btn btn-primary float-right mb-0 mt-2">查看更多</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div> -->
+
+
+    </div>
+</div>
+
+{% endblock %}
+
+
+<!-------------- JavaScript --------------->
+
+
+{% block js %}
+<script>
+    $("#homeSidebar").addClass("active")
+</script>
+{% endblock %}

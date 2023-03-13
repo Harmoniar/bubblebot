@@ -1,0 +1,26 @@
+# Core配置
+HTTP_HOST: "0.0.0.0"
+HTTP_PORT: 8080
+WORKERS: 1
+THREADS: 3
+WORKER_CONNECTIONS: 2000
+DEBUG: False
+
+# SECRET_KEY, 用于Django使用, 需要32位长度
+# cat /dev/urandom | tr -dc A-Za-z0-9 | head -c 32;echo
+SECRET_KEY: ""
+
+# API_KEY用于各组件与Core交互使用, 必须是16位长度
+# cat /dev/urandom | tr -dc A-Za-z0-9 | head -c 16;echo
+API_KEY: ""
+
+# 日志配置
+LOG_LEVEL: "DEBUG"
+LOG_DIR: "logs/"
+
+# MySQL配置
+DB_HOST: "127.0.0.1"
+DB_PORT: 3306
+DB_USER: "robot"
+DB_PASSWORD: ""
+DB_NAME: "robot"

@@ -1,0 +1,8 @@
+aredis
+apscheduler
+httpx
+pyyaml
+pycryptodome
+websockets
+loguru
+typing_extensions

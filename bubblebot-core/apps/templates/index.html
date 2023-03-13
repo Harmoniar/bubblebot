@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+
+    {% block title %}
+    {% endblock %}
+
+    <!-- pace loading bar js -->
+    <script src="{{ static('js/vendor/pace.min.js') }}"></script>
+    <!-- Bootstrap4 CSS -->
+    <link rel="stylesheet" href="{{ static('css/vendor/bootstrap4.min.css') }}">
+    <!-- Font Awesome CSS -->
+    <link rel="stylesheet" href="{{ static('css/vendor/fontawesome.all.min.css') }}">
+    <!-- Google fonts - Popppins for copy -->
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Poppins:300,400,500,600,800">
+    <!-- strawberry icons -->
+    <link rel="stylesheet" href="{{ static('css/vendor/strawberry.css') }}">
+    <!-- notify alert -->
+    <link rel="stylesheet" href="{{ static('css/vendor/notify.css') }}">
+    <!-- theme stylesheet -->
+    <link rel="stylesheet" href="{{ static('css/theme/style.default.css') }}" id="theme-stylesheet">
+    <!-- pace loading bar css -->
+    <link rel="stylesheet" href="{{ static('css/theme/minimal.css') }}">
+    <!-- Favicon -->
+    <link rel="shortcut icon" href="{{ static('img/logo.png') }}">
+    <!-- global CSS -->
+    <link rel="stylesheet" href="{{ static('css/custom/common.css') }}">
+    {% block css %}
+    {% endblock %}
+
+</head>
+
+<body class="hidden-scrollbar">
+    <header class="header">
+        <!-- 导航条开始 -->
+        <nav class="navbar navbar-expand-lg px-4 py-2 bg-white shadow">
+            <!-- 导航条-切换侧边栏展示按钮 -->
+            <a class="sidebar-toggler text-gray-500 mr-4 mr-lg-5 lead"><i class="fas fa-align-left"></i></a>
+            <!-- 导航条-标题 -->
+            <a href="{{ url('admin_home') }}" class="navbar-brand font-weight-bold text-uppercase text-base">BubbleBot Dashboard</a>
+
+            <!-- 导航条-右侧 -->
+            <ul class="ml-auto d-flex align-items-center list-unstyled mb-0">
+
+                <!-- 导航条-右侧-通知 -->
+                <li class="nav-item dropdown mr-3">
+                    <a id="notifications" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" class="nav-link dropdown-toggle text-gray-400 px-1">
+                        <i class="fa fa-bell"></i>
+                        <span class="notification-icon"></span>
+                    </a>
+                    <div aria-labelledby="notifications" class="dropdown-menu">
+                        <a href="#" class="dropdown-item">
+                            <div class="d-flex align-items-center">
+                                <div class="icon icon-sm bg-violet text-white"><i class="fab fa-twitter"></i></div>
+                                <div class="text ml-2">
+                                    <p class="mb-0">系统通知</p>
+                                </div>
+                            </div>
+                        </a><a href="#" class="dropdown-item">
+                            <div class="d-flex align-items-center">
+                                <div class="icon icon-sm bg-green text-white"><i class="fas fa-envelope"></i></div>
+                                <div class="text ml-2">
+                                    <p class="mb-0">平台公告</p>
+                                </div>
+                            </div>
+                            <div class="dropdown-divider"></div><a href="#" class="dropdown-item text-center"><small class="font-weight-bold headings-font-family text-uppercase">View all notifications</small></a>
+                    </div>
+                </li>
+
+                <!-- 导航条-右侧-头像 -->
+                <li class="nav-item dropdown ml-auto">
+                    <a id="userInfo" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" class="nav-link dropdown-toggle">
+                        <img src="{% if request.user.avatar %}{{ media(request.user.avatar) }}{% else %}{{ static('img/avatar/default.jpg') }}{% endif %}" style="max-width: 2.5rem;" class="img-fluid rounded-circle shadow">
+                    </a>
+                    <div aria-labelledby="userInfo" class="dropdown-menu">
+                        <a href="#" class="dropdown-item">
+                            <strong class="d-block text-uppercase headings-font-family">{{ request.user.username }}</strong>
+                        </a>
+                        <div class="dropdown-divider"></div>
+                        <a href="{{ url('admin_personal') }}" class="dropdown-item"><i class="czs-user-l mr-3 text-gray"></i>个人设置</a>
+                        <a id="logoutBtn" class="dropdown-item" url="{{ url('admin_logout') }}"><i class="czs-out-l mr-3 text-gray"></i>退出登录</a>
+                    </div>
+                </li>
+            </ul>
+        </nav>
+        <!-- 导航条结束 -->
+    </header>
+
+    <div class="d-flex align-items-stretch">
+        <!-- 侧边栏开始 -->
+        <div id="sidebar" class="sidebar py-3 hidden-scrollbar">
+            <!-- 侧边栏-MAIN -->
+            <div class="text-gray-400 text-uppercase px-3 px-lg-4 py-4 font-weight-bold small headings-font-family">MAIN</div>
+            <ul class="sidebar-menu list-unstyled">
+                <li class="sidebar-list-item">
+                    <a href="{{ url('admin_home') }}" id="homeSidebar" class="sidebar-link text-muted">
+                        <i class="czs-home-l mr-3 text-gray"></i>
+                        <span>主页</span>
+                    </a>
+                </li>
+                <li class="sidebar-list-item">
+                    <a href="{{ url('admin_robot') }}" id="robotSidebar" class="sidebar-link text-muted">
+                        <i class="czs-webcam-l mr-3 text-gray"></i>
+                        <span>BOT管理</span>
+                    </a>
+                </li>
+                <li class="sidebar-list-item">
+                    <a href="{{ url('admin_robot_function') }}" id="robotFunctionSidebar" class="sidebar-link text-muted">
+                        <i class="czs-dashboard-l mr-3 text-gray"></i>
+                        <span>BOT功能</span>
+                    </a>
+                </li>
+                <li class="sidebar-list-item">
+                    <a href="{{ url('admin_robot_timing') }}" id="robotTimingSidebar" class="sidebar-link text-muted">
+                        <i class="czs-dashboard-l mr-3 text-gray"></i>
+                        <span>BOT定时任务</span>
+                    </a>
+                </li>
+            </ul>
+            <div class="text-gray-400 text-uppercase px-3 px-lg-4 py-4 font-weight-bold small headings-font-family">MANAGE</div>
+            <ul class="sidebar-menu list-unstyled">
+                <li class="sidebar-list-item">
+                    <a href="" data-toggle="collapse" data-target="#systemSettingsCollapse" aria-expanded="false" aria-controls="systemSettingsCollapse" class="sidebar-link text-muted">
+                        <i class="czs-slider-l mr-3 text-gray"></i>
+                        <span>个人设置</span>
+                    </a>
+                    <div id="systemSettingsCollapse" class="collapse">
+                        <ul class="sidebar-menu list-unstyled border-left border-primary border-thick">
+                            <li class="sidebar-list-item">
+                                <a href="{{ url('admin_personal') }}" id="personalSidebar" class="sidebar-link text-muted pl-lg-5">用户信息</a>
+                            </li>
+                            <li class="sidebar-list-item">
+                                <a href="{{ url('admin_loginlog') }}" id="loginLogSidebar" class="sidebar-link text-muted pl-lg-5">登录日志</a>
+                            </li>
+                        </ul>
+                    </div>
+                    </a>
+                </li>
+                <li class="sidebar-list-item">
+                    <a href="" data-toggle="collapse" data-target="#systemManageCollapse" aria-expanded="false" aria-controls="systemManageCollapse" class="sidebar-link text-muted">
+                        <i class="czs-slider-l mr-3 text-gray"></i>
+                        <span>系统管理</span>
+                    </a>
+                    <div id="systemManageCollapse" class="collapse">
+                        <ul class="sidebar-menu list-unstyled border-left border-primary border-thick">
+                            <li class="sidebar-list-item">
+                                <a href="{{ url('admin_function') }}" id="functionSidebar" class="sidebar-link text-muted pl-lg-5">功能管理</a>
+                            </li>
+                            <li class="sidebar-list-item">
+                                <a href="{{ url('admin_timing_function') }}" id="timingFunctionSidebar" class="sidebar-link text-muted pl-lg-5">定时功能</a>
+                            </li>
+                            <li class="sidebar-list-item">
+                                <a href="{{ url('admin_component') }}" id="componentSidebar" class="sidebar-link text-muted pl-lg-5">组件监控</a>
+                            </li>
+                            <!-- <li class="sidebar-list-item">
+                                <a href="#" class="sidebar-link text-muted pl-lg-5">用户管理</a>
+                            </li>
+                            <li class="sidebar-list-item">
+                                <a href="#" class="sidebar-link text-muted pl-lg-5">角色管理</a>
+                            </li>
+                            <li class="sidebar-list-item">
+                                <a href="#" class="sidebar-link text-muted pl-lg-5">参数管理</a>
+                            </li> -->
+                        </ul>
+                    </div>
+                    <!-- </li> -->
+            </ul>
+        </div>
+        <!-- 侧边栏结束 -->
+
+        <!-- 内容开始 -->
+        <div class="page-holder w-100 d-flex flex-wrap">
+            <div class="container-fluid px-xl-5 py-5">
+
+                {% block content %}
+                {% endblock %}
+
+            </div>
+
+            <!-- 页脚 -->
+            <footer class="footer bg-white shadow align-self-end py-3 px-xl-5 w-100">
+                <div class="container-fluid">
+                    <div class="row">
+                        <div class="col-md-6 text-center text-md-left text-primary">
+                            <p class="mb-2 mb-md-0"></p>
+                        </div>
+                        <div class="col-md-6 text-center text-md-right text-gray-400">
+                            <p class="mb-0">Copyright &copy; 2022 BubbleBot Powered by Django</p>
+                        </div>
+                    </div>
+                </div>
+            </footer>
+        </div>
+        <!-- 内容结束 -->
+    </div>
+
+    <!-- JavaScript文件导入 -->
+    <script src="{{ static('js/vendor/jquery.min.js') }}"></script>
+    <script src="{{ static('js/vendor/popper.min.js') }}"></script>
+    <script src="{{ static('js/vendor/bootstrap4.min.js') }}"></script>
+    <script src="{{ static('js/vendor/sweetalert.min.js') }}"></script>
+    <script src="{{ static('js/vendor/notify.js') }}"></script>
+    <script src="{{ static('js/custom/common.js') }}"></script>
+    <script src="{{ static('js/custom/index.js') }}"></script>
+    {% block js %}
+    {% endblock %}
+
+</body>
+
+</html>
